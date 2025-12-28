@@ -1,14 +1,18 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const cors = require('cors');
-require('dotenv').config();
+const connectDB = require('./config/db');
+const restaurantRoutes = require('./routes/restaurantRoutes');
+
+dotenv.config();
+connectDB();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('FoodExpress API is running...');
-});
+// Routes
+app.use('/api/restaurants', restaurantRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
