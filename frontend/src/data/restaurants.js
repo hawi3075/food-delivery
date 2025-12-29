@@ -1,21 +1,29 @@
 export const restaurants = [
   {
     id: 1,
-    name: "Green Bowl",
-    category: "Healthy • Salads • Vegan",
-    rating: 4.6,
-    time: "20-30 min",
-    distance: "1.2km",
-    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80",
+    name: "Burger King",
+    image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500",
+    rating: 4.5,
+    time: "25-35 min",
+    category: "Fast Food",
+    deliveryFee: "Free"
   },
   {
     id: 2,
-    name: "KFC",
-    category: "Fried Chicken • American",
-    rating: 4.4,
-    time: "15-25 min",
-    distance: "0.8km",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80",
+    name: "Pizza Hut",
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+    rating: 4.2,
+    time: "30-40 min",
+    category: "Pizza",
+    deliveryFee: "$2.99"
   },
-  // Add more items here...
+  {
+    id: 3,
+    name: "Healthy Bowl",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500",
+    rating: 4.8,
+    time: "15-25 min",
+    category: "Healthy",
+    deliveryFee: "Free"
+  }
 ];
