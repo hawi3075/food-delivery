@@ -6,12 +6,10 @@ require('dotenv').config();
 const app = express();
 
 // 1. MIDDLEWARE
-// CORS is essential to allow your Vite frontend (port 5175) to talk to this backend
 app.use(cors()); 
 app.use(express.json());
 
 // 2. MONGODB CONNECTION
-// Replace 'your_mongodb_uri' with your actual connection string from MongoDB Atlas
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/food_express';
 mongoose.connect(mongoURI)
   .then(() => console.log('✅ MongoDB Connected Successfully'))
@@ -24,13 +22,23 @@ const restaurantSchema = new mongoose.Schema({
   image: String,
   rating: Number,
   deliveryTime: String,
-  distance: String
+  distance: String,
+  // You can add a menu array here later
+  menu: [
+    {
+      name: String,
+      price: Number,
+      description: String,
+      image: String
+    }
+  ]
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
 // 4. API ROUTES
-// This matches the 'http://localhost:5000/api/restaurants' call in your frontend
+
+// Route A: Get ALL restaurants (for the Home page)
 app.get('/api/restaurants', async (req, res) => {
   try {
     const restaurants = await Restaurant.find();
@@ -40,7 +48,21 @@ app.get('/api/restaurants', async (req, res) => {
   }
 });
 
-// Helper route to seed data (run this once by visiting http://localhost:5000/api/seed)
+// Route B: Get a SINGLE restaurant by ID (for the Details/Menu page)
+app.get('/api/restaurants/:id', async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findById(req.params.id);
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+    res.json(restaurant);
+  } catch (error) {
+    // If the ID is not a valid MongoDB ObjectId, it will trigger an error
+    res.status(500).json({ message: "Error fetching restaurant details" });
+  }
+});
+
+// Route C: Seed Data (to populate your database)
 app.get('/api/seed', async (req, res) => {
   const sampleData = [
     {
@@ -60,9 +82,13 @@ app.get('/api/seed', async (req, res) => {
       distance: "2.5km"
     }
   ];
-  await Restaurant.deleteMany({});
-  await Restaurant.insertMany(sampleData);
-  res.send("Database Seeded with Sample Restaurants!");
+  try {
+    await Restaurant.deleteMany({});
+    await Restaurant.insertMany(sampleData);
+    res.send("Database Seeded with Sample Restaurants!");
+  } catch (err) {
+    res.status(500).send("Error seeding database");
+  }
 });
 
 // 5. START SERVER
